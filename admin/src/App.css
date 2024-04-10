@@ -1,0 +1,163 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  background-color: rgb(231, 143, 213);
+  font-family: 'Montserrat', sans-serif;
+ 
+}
+.container.total {
+  padding: 2%;
+  width: 80%;
+  border: 2px black solid;
+  margin-top: 5%;
+  background-image: linear-gradient(120deg, rgba(41, 200, 178, 0.77), rgba(22, 231, 55, 0.77));
+  color: snow;
+}
+.staff-list.row {
+  border: 1px #f0f0f0 solid;
+  width: 95%;
+  margin: auto;
+  margin-top: 10px;
+}
+#selec {
+  text-align: end;
+  width: 100%;
+
+}
+#colum {
+  width: 100%;
+}
+#title-staff {
+  background-color: darkgray;
+}
+#div-infor {
+  padding: 2%;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: rgb(209, 219, 209);
+  border: 1px white solid;
+  border-radius: 4px;
+  color: black;
+}
+#menu {
+  display: flex;
+  justify-content: space-between;
+  background-color: azure;  
+}
+a{
+  color: rgb(10, 10, 10);
+}
+.row.navi {
+  padding: 2%;
+
+}
+div {
+  padding: 2px;
+}
+
+#img-profile-tag {
+  width: 100%;
+}
+
+.infor {
+  font-size: 1.5rem;
+}
+li {
+  list-style-type: none;
+}
+#name-info {
+  text-align: center;
+}
+#p-footer {
+  background-color: rgb(133, 133, 133);
+  text-align: center;
+}
+footer {
+  margin-top: inherit;
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+}
+#name-staff {
+  text-align: center;
+  font-size: 12px;
+}
+.breadcrumb {
+  background-color: rgba(255, 255, 255, 0);
+}
+.card {
+  margin: 5px;
+  margin-bottom: 10px;
+  font-weight: 800;
+  background-image: linear-gradient(180deg, rgba(52, 200, 41, 0.615), rgba(22, 231, 55, 0.77));
+  color:rgb(255, 255, 255)
+}
+.card-title {
+  background-color: rgba(43, 43, 226, 0.861);
+}
+.department {
+  border: 2px #f0f0f0 solid;
+  width: 95%;
+  margin: auto;
+  margin-top: 10px;
+}
+.salary {
+  border: 1px #f0f0f0 solid;
+  width: 95%;
+  margin: auto;
+  margin-top: 10px;
+}
+#department-img {
+ object-fit: contain;
+  width: 100%;
+  height: 150px;
+}
+.cardOverTime {
+
+  padding: 5px;
+}
+#sort-overtime {
+  border: 2px white solid;
+}
+#button-sort button{
+ margin: 5px;
+}
+.departmentShow {
+  border: 2px #f0f0f0 solid;
+  margin: 5px;
+}
+#search-name {
+  width: 100%;
+  height: 30px;
+}
+p {
+  color: rgb(255, 255, 255);
+}
+.page-enter {
+  opacity: 0.01;
+  transform: translateX(-100%);
+}
+
+.page-enter-active {
+  opacity: 1;
+  transform: translateX(0%);
+  transition: all 300ms ease-in;
+}
+
+.page-exit {
+  opacity: 1;
+  transform: translateX(0%);
+}
+
+.page-exit-active {
+  opacity: 0.01;
+  transform: translateX(100%);
+  transition: all 300ms ease-out;
+}
+
+h5 {
+  font-weight: bolder;
+  color:rgb(40, 17, 251);
+}
