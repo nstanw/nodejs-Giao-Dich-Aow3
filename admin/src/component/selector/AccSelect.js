@@ -4,7 +4,7 @@ import { Select } from "antd";
 
 const { Option } = Select;
 
-const AccSelect = ({ onChange = (value) => {} }) => {
+const AccSelect = ({ onChange = (value) => {}, user }) => {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
@@ -18,7 +18,7 @@ const AccSelect = ({ onChange = (value) => {} }) => {
     };
 
     fetchUsers();
-  }, []);
+  }, [user]);
 
   return (
     <Select placeholder="Chọn tài khoản" onChange={(value) => onChange(value)}>

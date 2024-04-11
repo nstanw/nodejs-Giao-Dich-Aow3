@@ -11,15 +11,18 @@ import {
   Switch,
   Select,
   Table,
+  Spin,
 } from "antd";
-import http from "../../services/http";
 import AccSelect from "../selector/AccSelect";
 import UserSelect from "../selector/UserSelect";
 import columns from "./columns";
+import giaoDichServices from "../../services/giaoDichs/giaoDichServices";
 const { Option } = Select;
 interface Staff {
   fullName: string;
   user: any;
+  soGold: number;
+  soTien: number;
   // Thêm các trường khác tương ứng với dữ liệu của bạn
 }
 
@@ -28,13 +31,17 @@ function GiaoDichs() {
   const [giaoDichs, setGiaoDichs] = useState<Staff[]>([]);
   const [userSelect, setUserSelect] = useState();
   const [accSelect, setAccSelect] = useState();
+  const [isLoading, setIsLoading] = useState(false);
   const fetchGiaoDichs = async () => {
     try {
-      const response = await http.get("api/giaoDichs");
-      const staffs = response.data;
+      setIsLoading(true);
+      const response = await giaoDichServices.getGiaoDichs();
+      const staffs = response;
       setGiaoDichs(staffs);
+      setIsLoading(false);
     } catch (error) {
       console.log("Error:", error);
+      setIsLoading(false);
     }
   };
 
@@ -53,7 +60,7 @@ function GiaoDichs() {
         try {
           values.googleAccount = [accSelect];
           values.user = userSelect;
-          await http.post("/api/giaoDichs", values);
+          await await giaoDichServices.addGiaoDich(values);
           form.resetFields();
         } catch (error) {
           console.error(error);
@@ -76,23 +83,51 @@ function GiaoDichs() {
     // Thêm code để xử lý dữ liệu form tại đây
   };
 
+  const uniqueStaffs = giaoDichs.filter(
+    (staff, index, self) =>
+      index === self.findIndex((s) => s.user.fullName === staff.user.fullName)
+  );
+
   return (
     <div>
       <Button type="primary" onClick={showModal}>
         Tạo giao dịch
       </Button>
-      <List
-        grid={{ gutter: 16, column: 4 }}
+      <Spin spinning={isLoading}>
+        <List
+          grid={{ gutter: 16, xs: 1, sm: 2, lg: 3 }}
+          dataSource={uniqueStaffs}
+          renderItem={(item) => (
+            <List.Item>
+              <Card title={item?.user?.fullName}>
+                {/* Thêm thông tin khác của khách hàng vào Card tại đây */}
+              </Card>
+            </List.Item>
+          )}
+        />
+      </Spin>
+
+
+
+      <div>
+        <h2>
+          Tổng số Gold:{" "}
+          {giaoDichs.reduce((total, item) => total + item?.soGold, 0).toLocaleString()}
+        </h2>
+        <h2>
+          Tổng số tiền:{" "}
+          {giaoDichs.reduce((total, item) => total + item?.soTien, 0).toLocaleString()}
+        </h2>
+      </div>
+
+      
+      <Table
+        loading={isLoading}
+        columns={columns}
         dataSource={giaoDichs}
-        renderItem={(item) => (
-          <List.Item>
-            <Card title={item?.user?.fullName}>
-              {/* Thêm thông tin khác của khách hàng vào Card tại đây */}
-            </Card>
-          </List.Item>
-        )}
+        rowKey="_id"
       />
-      <Table columns={columns} dataSource={giaoDichs} rowKey="_id" />;
+      ;
       <Modal
         title="Tạo giao dịch mới"
         visible={isModalVisible}
@@ -109,7 +144,10 @@ function GiaoDichs() {
             <UserSelect onChange={(value) => setUserSelect(value)} />
           </Form.Item>
           <Form.Item label="Chọn tài khoản" name="addGoogleAccount">
-            <AccSelect onChange={(value) => setAccSelect(value)} />
+            <AccSelect
+              onChange={(value) => setAccSelect(value)}
+              user={userSelect}
+            />
           </Form.Item>
           <Form.Item label="Ngày giao dịch" name="ngayGiaoDich">
             <DatePicker />
@@ -124,7 +162,7 @@ function GiaoDichs() {
             <InputNumber />
           </Form.Item>
           <Form.Item label="Loại chuyển khoản" name="loaiChuyenKhoan">
-            <Select >
+            <Select>
               <Option value="Ngân Hàng">Ngân Hàng</Option>
               <Option value="Momo">Momo</Option>
             </Select>

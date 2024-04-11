@@ -28,10 +28,7 @@ const KhachHangs = () => {
     } else {
       values.user = user;
       if (editingGoogleAccount) {
-        await http.patch(
-          `/api/users/${editingGoogleAccount._id}`,
-          values
-        );
+        await http.patch(`/api/users/${editingGoogleAccount._id}`, values);
       } else {
         await http.post("/api/users", values);
       }
@@ -48,12 +45,17 @@ const KhachHangs = () => {
   const columns = [
     { title: "fullName", dataIndex: "fullName", key: "fullName" },
     { title: "zalo", dataIndex: "zalo", key: "zalo" },
-    { 
-      title: "facebook", 
-      dataIndex: "facebook", 
-      key: "facebook",
-      render: (text) => <a href={text} target="_blank" rel="noopener noreferrer">{text}</a>
-    },
+    // {
+    //   title: "facebook",
+    //   dataIndex: "facebook",
+    //   width: 150,
+    //   key: "facebook",
+    //   render: (text) => (
+    //     <a href={text} target="_blank" rel="noopener noreferrer">
+    //       {text}
+    //     </a>
+    //   ),
+    // },
     { title: "note", dataIndex: "note", key: "note" },
     {
       title: "Action",
