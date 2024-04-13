@@ -12,17 +12,20 @@ import {
   Select,
   Table,
   Spin,
+  Space,
 } from "antd";
 import AccSelect from "../selector/AccSelect";
 import UserSelect from "../selector/UserSelect";
 import columns from "./columns";
 import giaoDichServices from "../../services/giaoDichs/giaoDichServices";
+import moment from "moment";
 const { Option } = Select;
 interface Staff {
   fullName: string;
   user: any;
   soGold: number;
   soTien: number;
+  soTienNo: number;
   // Thêm các trường khác tương ứng với dữ liệu của bạn
 }
 
@@ -87,6 +90,11 @@ function GiaoDichs() {
     (staff, index, self) =>
       index === self.findIndex((s) => s.user.fullName === staff.user.fullName)
   );
+  const initvalue = {
+    ngayGiaoDich: moment(),
+    soTienNo: 0,
+    loaiChuyenKhoan: "Ngân Hàng",
+  };
 
   return (
     <div>
@@ -106,22 +114,28 @@ function GiaoDichs() {
           )}
         />
       </Spin>
-
-
-
-      <div>
-        <h2>
-          Tổng số Gold:{" "}
-          {giaoDichs.reduce((total, item) => total + item?.soGold, 0).toLocaleString()}
-        </h2>
-        <h2>
-          Tổng số tiền:{" "}
-          {giaoDichs.reduce((total, item) => total + item?.soTien, 0).toLocaleString()}
-        </h2>
-      </div>
-
-      
+      <Space style={{ textAlign: "left" }}>
+        <h4>
+          Tổng số Gold:
+          {giaoDichs
+            .reduce((total, item) => total + item?.soGold, 0)
+            .toLocaleString()}
+        </h4>
+        <h4>
+          Tổng tiền:
+          {giaoDichs
+            .reduce((total, item) => total + item?.soTien, 0)
+            .toLocaleString()}
+        </h4>
+        <h4>
+          Tổng tiền nợ:
+          {giaoDichs
+            .reduce((total, item) => total + item?.soTienNo, 0)
+            .toLocaleString()}
+        </h4>
+      </Space>
       <Table
+        pagination={false}
         loading={isLoading}
         columns={columns}
         dataSource={giaoDichs}
@@ -139,6 +153,7 @@ function GiaoDichs() {
           onFinish={onFinish}
           labelCol={{ span: 8 }}
           wrapperCol={{ span: 16 }}
+          initialValues={initvalue}
         >
           <Form.Item label="Chọn khách hàng" name="user">
             <UserSelect onChange={(value) => setUserSelect(value)} />
@@ -158,11 +173,15 @@ function GiaoDichs() {
           <Form.Item label="Số Gold" name="soGold">
             <InputNumber />
           </Form.Item>
-          <Form.Item label="Số tiền" name="soTien">
+          <Form.Item label="Số tiền chuyển khoản" name="soTien">
+            <InputNumber />
+          </Form.Item>
+          <Form.Item label="Số tiền nợ" name="soTienNo">
             <InputNumber />
           </Form.Item>
           <Form.Item label="Loại chuyển khoản" name="loaiChuyenKhoan">
             <Select>
+              <Option value="No">Chưa thanh toán</Option>
               <Option value="Ngân Hàng">Ngân Hàng</Option>
               <Option value="Momo">Momo</Option>
             </Select>

@@ -10,7 +10,9 @@ const AccSelect = ({ onChange = (value) => {}, user }) => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await http.get("/api/googleAccounts");
+        const response = await http.get("/api/googleAccounts", {
+          params: { user: user },
+        });
         setUsers(response.data);
       } catch (error) {
         console.error(error);

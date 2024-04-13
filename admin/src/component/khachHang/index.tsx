@@ -43,6 +43,12 @@ const KhachHangs = () => {
   };
 
   const columns = [
+    {
+      title: "STT",
+      dataIndex: "STT",
+      key: "STT",
+      render: (text, _, index) => <div>{index + 1}</div>,
+    },
     { title: "fullName", dataIndex: "fullName", key: "fullName" },
     { title: "zalo", dataIndex: "zalo", key: "zalo" },
     // {
@@ -83,7 +89,7 @@ const KhachHangs = () => {
           fetchKhachHangs();
         }}
       />
-      <Table dataSource={googleAccounts} columns={columns} rowKey="_id" />
+      <Table    pagination={false} dataSource={googleAccounts} columns={columns} rowKey="_id" />
       <Modal
         open={modalVisible}
         title="Thêm Khách Hàng"

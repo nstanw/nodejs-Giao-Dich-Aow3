@@ -7,7 +7,9 @@ const GoogleAccountCRUD = () => {
   const [form] = Form.useForm();
   const [googleAccounts, setGoogleAccounts] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-  const [editingGoogleAccount, setEditingGoogleAccount] = useState<{ _id: string } | null>(null);
+  const [editingGoogleAccount, setEditingGoogleAccount] = useState<{
+    _id: string;
+  } | null>(null);
   const [user, setUser] = useState("");
 
   useEffect(() => {
@@ -43,6 +45,12 @@ const GoogleAccountCRUD = () => {
   };
 
   const columns = [
+    {
+      title: "STT",
+      dataIndex: "STT",
+      key: "STT",
+      render: (text, _, index) => <div>{index + 1}</div>,
+    },
     { title: "Gmail", dataIndex: "gmail", key: "gmail" },
     { title: "Password", dataIndex: "password", key: "password" },
     { title: "Info", dataIndex: "info", key: "info" },
@@ -75,7 +83,7 @@ const GoogleAccountCRUD = () => {
       >
         New Google Account
       </Button>
-      <Table dataSource={googleAccounts} columns={columns} rowKey="_id" />
+      <Table  pagination={false} dataSource={googleAccounts} columns={columns} rowKey="_id" />
       <Modal
         visible={modalVisible}
         title="Google Account"
