@@ -13,6 +13,7 @@ import {
   Table,
   Spin,
   Descriptions,
+  TimeRangePickerProps,
 } from "antd";
 import { Link } from 'react-router-dom';
 import AccSelect from "../selector/AccSelect";
@@ -20,6 +21,9 @@ import UserSelect from "../selector/UserSelect";
 import columns from "./columns";
 import giaoDichServices from "../../services/giaoDichs/giaoDichServices";
 import moment from "moment";
+import dayjs from "dayjs";
+
+const { RangePicker } = DatePicker;
 const { Option } = Select;
 interface Staff {
   fullName: string;
@@ -36,10 +40,19 @@ function GiaoDichs() {
   const [userSelect, setUserSelect] = useState();
   const [accSelect, setAccSelect] = useState();
   const [isLoading, setIsLoading] = useState(false);
-  const fetchGiaoDichs = async () => {
+  let startDate = moment().startOf('day').format('YYYY-MM-DD HH:mm:ss');
+  let endDate = moment().endOf('day').format('YYYY-MM-DD HH:mm:ss');
+
+  const fetchGiaoDichs = async (startDate, endDate) => {
     try {
       setIsLoading(true);
-      const response = await giaoDichServices.getGiaoDichs();
+
+      const response = await giaoDichServices.getAllGiaoDichs(
+        {
+          startDate: startDate,
+          endDate: endDate
+        }
+      );
       const staffs = response;
       setGiaoDichs(staffs);
       setIsLoading(false);
@@ -50,7 +63,8 @@ function GiaoDichs() {
   };
 
   useEffect(() => {
-    fetchGiaoDichs();
+
+    fetchGiaoDichs(startDate, endDate);
   }, []);
 
   const [form] = Form.useForm();
@@ -70,7 +84,7 @@ function GiaoDichs() {
           console.error(error);
         }
         form.resetFields();
-        fetchGiaoDichs();
+        fetchGiaoDichs(startDate, endDate);
         setIsModalVisible(false);
       })
       .catch((info) => {
@@ -97,13 +111,39 @@ function GiaoDichs() {
     loaiChuyenKhoan: "Ngân Hàng",
   };
 
+  //#region  // Các hàm xử lý thời gian
+  const rangePresets: TimeRangePickerProps['presets'] = [
+    { label: 'Today', value: [dayjs().add(0, 'd'), dayjs()] },
+    { label: 'This Mounth', value: [dayjs().startOf('month'), dayjs()] },
+    { label: 'Last 7 Days', value: [dayjs().add(-7, 'd'), dayjs()] },
+    { label: 'Last 14 Days', value: [dayjs().add(-14, 'd'), dayjs()] },
+    { label: 'Last 30 Days', value: [dayjs().add(-30, 'd'), dayjs()] },
+    { label: 'Last 90 Days', value: [dayjs().add(-90, 'd'), dayjs()] },
+  ];
+
+  const onChangeTimeSearch = (dates, dateStrings) => {
+    let [startDate, endDate] = dateStrings;
+    startDate = moment(startDate).startOf('day').format('YYYY-MM-DD HH:mm:ss');
+    endDate = moment(endDate).endOf('day').format('YYYY-MM-DD HH:mm:ss');
+    console.log('Start date:', startDate);
+    console.log('End date:', endDate);
+    // Gọi API ở đây với startDate và endDate
+    fetchGiaoDichs(startDate, endDate);
+  };
+
+  //#endregion
+
   return (
     <div>
       <Button type="primary" onClick={showModal}>
         Tạo giao dịch
       </Button>
-      <Spin spinning={isLoading}>
 
+
+
+      <RangePicker defaultValue={[dayjs().add(0, 'd'), dayjs()]} onChange={onChangeTimeSearch} presets={rangePresets} />
+
+      <Spin spinning={isLoading}>
         <List
           grid={{ gutter: 16, xs: 1, sm: 2, lg: 3 }}
           dataSource={uniqueStaffs}
@@ -134,11 +174,20 @@ function GiaoDichs() {
         </Descriptions>
       </Card>
       <Table
+        rowKey="_id"
         pagination={false}
         loading={isLoading}
         columns={columns}
         dataSource={giaoDichs}
-        rowKey="_id"
+        onRow={(record, rowIndex) => {
+          return {
+            onDoubleClick: event => {
+              // Mở modal và đặt giá trị ban đầu cho form với dữ liệu từ hàng được nhấn đúp
+              setIsModalVisible(true);
+              form.setFieldsValue(record);
+            },
+          };
+        }}
       />
       ;
       <Modal

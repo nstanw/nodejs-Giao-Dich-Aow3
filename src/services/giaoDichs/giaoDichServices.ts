@@ -9,8 +9,8 @@ class GiaoDichServices {
         let result = await http.get('api/giaoDichs/' + userId);
         return result.data;
     }
-    public async getGiaoDichs() {
-        let result = await http.get('api/giaoDichs');
+    public async getAllGiaoDichs(input) {
+        let result = await http.get('api/giaoDichs', { params: input });
         return result.data;
     }
     public async updateGiaoDich(input) {
