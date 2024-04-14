@@ -5,7 +5,7 @@ import { BrowserRouter } from "react-router-dom";
 function App() {
   //hoook
   return (
-    <BrowserRouter>
+    <BrowserRouter  basename={process.env.REACT_APP_PUBLIC_URL}>
       <div className="container total">
         <Main />
       </div>

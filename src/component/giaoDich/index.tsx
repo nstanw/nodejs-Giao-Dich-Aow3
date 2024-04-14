@@ -12,8 +12,9 @@ import {
   Select,
   Table,
   Spin,
-  Space,
+  Descriptions,
 } from "antd";
+import { Link } from 'react-router-dom';
 import AccSelect from "../selector/AccSelect";
 import UserSelect from "../selector/UserSelect";
 import columns from "./columns";
@@ -102,6 +103,7 @@ function GiaoDichs() {
         Tạo giao dịch
       </Button>
       <Spin spinning={isLoading}>
+
         <List
           grid={{ gutter: 16, xs: 1, sm: 2, lg: 3 }}
           dataSource={uniqueStaffs}
@@ -109,31 +111,28 @@ function GiaoDichs() {
             <List.Item>
               <Card title={item?.user?.fullName}>
                 {/* Thêm thông tin khác của khách hàng vào Card tại đây */}
+                <Link to={`/${item?.user?._id}`}>
+                  <Button type="link">Chi tiết</Button>
+                </Link>
               </Card>
             </List.Item>
           )}
         />
       </Spin>
-      <Space style={{ textAlign: "left" }}>
-        <h4>
-          Tổng số Gold:
-          {giaoDichs
-            .reduce((total, item) => total + item?.soGold, 0)
-            .toLocaleString()}
-        </h4>
-        <h4>
-          Tổng tiền:
-          {giaoDichs
-            .reduce((total, item) => total + item?.soTien, 0)
-            .toLocaleString()}
-        </h4>
-        <h4>
-          Tổng tiền nợ:
-          {giaoDichs
-            .reduce((total, item) => total + item?.soTienNo, 0)
-            .toLocaleString()}
-        </h4>
-      </Space>
+
+      <Card>
+        <Descriptions title="Thông tin giao dịch">
+          <Descriptions.Item label="Tổng số Gold">
+            {giaoDichs.reduce((total, item) => total + item?.soGold, 0).toLocaleString()}
+          </Descriptions.Item>
+          <Descriptions.Item label="Tổng tiền">
+            {giaoDichs.reduce((total, item) => total + item?.soTien, 0).toLocaleString()}
+          </Descriptions.Item>
+          <Descriptions.Item label="Tổng tiền nợ">
+            {giaoDichs.reduce((total, item) => total + (item?.soTienNo || 0), 0).toLocaleString()}
+          </Descriptions.Item>
+        </Descriptions>
+      </Card>
       <Table
         pagination={false}
         loading={isLoading}
@@ -144,7 +143,7 @@ function GiaoDichs() {
       ;
       <Modal
         title="Tạo giao dịch mới"
-        visible={isModalVisible}
+        open={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
       >

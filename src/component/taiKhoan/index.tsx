@@ -85,7 +85,7 @@ const GoogleAccountCRUD = () => {
       </Button>
       <Table  pagination={false} dataSource={googleAccounts} columns={columns} rowKey="_id" />
       <Modal
-        visible={modalVisible}
+        open={modalVisible}
         title="Google Account"
         onCancel={() => setModalVisible(false)}
         footer={null}

@@ -5,6 +5,10 @@ class GiaoDichServices {
         let result = await http.post('api/giaoDichs', input);
         return result.data;
     }
+    public async getGiaoDichByUser(userId) {
+        let result = await http.get('api/giaoDichs/' + userId);
+        return result.data;
+    }
     public async getGiaoDichs() {
         let result = await http.get('api/giaoDichs');
         return result.data;

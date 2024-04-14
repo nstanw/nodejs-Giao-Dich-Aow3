@@ -17,19 +17,19 @@ const columns = [
     title: "Số Gold",
     dataIndex: "soGold",
     key: "soGold",
-    render: (text) => text.toLocaleString(),
+    render: (text) => text ? text.toLocaleString() : 0,
   },
   {
     title: "Số tiền",
     dataIndex: "soTien",
     key: "soTien",
-    render: (text) => text.toLocaleString(),
+    render: (text) => text ? text.toLocaleString() : 0,
   },
   {
     title: "Số tiền nợ",
     dataIndex: "soTienNo",
     key: "soTien",
-    render: (text) => text.toLocaleString(),
+    render: (text) => text ? text.toLocaleString() : 0,
   },
   // {
   //   title: 'Loại chuyển khoản',

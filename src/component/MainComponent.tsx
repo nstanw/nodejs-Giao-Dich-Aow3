@@ -6,6 +6,7 @@ import GoogleAccountCRUD from "./taiKhoan";
 import KhachHangs from "./khachHang";
 import { CSSTransition } from "react-transition-group";
 import { TransitionGroup } from "react-transition-group";
+import DetailGiaoDich from "./giaoDich/detail";
 
 function Main() {
   const location = useLocation();
@@ -20,6 +21,7 @@ function Main() {
           
             <Route path="/taiKhoans" element={<GoogleAccountCRUD />} />
             <Route path="/khachHangs" element={<KhachHangs />} />
+            <Route path="/:userId" element={<DetailGiaoDich />} />
             {/* <Route exact path="/staffs/:staffId" element={<StaffInfor />} /> */}
             {/* <Route
               path="/departments"
