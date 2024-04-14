@@ -1,11 +1,12 @@
 import http from "../../services/http";
 import React, { useEffect, useState } from "react";
 import { Select } from "antd";
+import { GoogleAccount, User } from "../../services/giaoDichs/dto/Transactions";
 
 const { Option } = Select;
 
 const AccSelect = ({ onChange = (value) => {}, user }) => {
-  const [users, setUsers] = useState([]);
+  const [googleAccount, setGoogleAccount] = useState<GoogleAccount[]>([]);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -13,7 +14,7 @@ const AccSelect = ({ onChange = (value) => {}, user }) => {
         const response = await http.get("/api/googleAccounts", {
           params: { user: user },
         });
-        setUsers(response.data);
+        setGoogleAccount(response.data);
       } catch (error) {
         console.error(error);
       }
@@ -24,7 +25,7 @@ const AccSelect = ({ onChange = (value) => {}, user }) => {
 
   return (
     <Select placeholder="Chọn tài khoản" onChange={(value) => onChange(value)}>
-      {users.map((user) => (
+      {googleAccount.map((user) => (
         <Option key={user._id} value={user._id}>
           {user.gmail}
         </Option>

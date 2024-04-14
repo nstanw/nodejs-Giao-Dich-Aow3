@@ -8,6 +8,17 @@ const columns = [
         render: (text, _, index) => <div>{index + 1}</div>,
     },
     {
+        title: "Duration",
+        dataIndex: "Duration",
+        key: "Duration",
+        render: (text, record) => {
+            const today = moment();
+            const transactionDate = moment(record.ngayGiaoDich);
+            const diffDays = today.diff(transactionDate, 'days');
+            return diffDays;
+        },
+    },
+    {
         title: "Ngày giao dịch",
         dataIndex: "ngayGiaoDich",
         key: "ngayGiaoDich",

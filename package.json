@@ -19,6 +19,7 @@
     "axios": "^0.27.2",
     "boostrap": "^2.0.0",
     "dateformat": "^5.0.3",
+    "dayjs": "^1.11.10",
     "final-form": "^4.20.7",
     "gh-pages": "^6.1.1",
     "jquery": "^3.6.0",

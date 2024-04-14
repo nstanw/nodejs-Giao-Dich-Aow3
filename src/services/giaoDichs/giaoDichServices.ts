@@ -18,7 +18,7 @@ class GiaoDichServices {
         return result.data;
     }
     public async deleteGiaoDich(id) {
-        let result = await http.delete(`api/giaoDichs`);
+        let result = await http.delete(`api/giaoDichs`, { params: { id: id } });
         return result.data;
     }
 

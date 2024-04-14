@@ -1,11 +1,22 @@
 import moment from "moment";
-
+import { Link } from 'react-router-dom';
 const columns = [
   {
     title: "STT",
     dataIndex: "STT",
     key: "STT",
     render: (text, _, index) => <div>{index + 1}</div>,
+  },
+  {
+    title: "Duration",
+    dataIndex: "Duration",
+    key: "Duration",
+    render: (text, record) => {
+      const today = moment();
+      const transactionDate = moment(record.ngayGiaoDich);
+      const diffDays = today.diff(transactionDate, 'days');
+      return diffDays;
+    },
   },
   {
     title: "Ngày giao dịch",
@@ -40,7 +51,7 @@ const columns = [
     title: "User",
     dataIndex: "user",
     key: "user",
-    render: (user) => user.fullName,
+    render: (user) => <Link to={`/${user._id}`}>{user.fullName}</Link>,
   },
   // {
   //   title: 'Google Account',

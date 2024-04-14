@@ -2,15 +2,17 @@ import React, { useState, useEffect } from "react";
 import { Form, Input, Button, Table, Modal, message } from "antd";
 import http from "../../services/http";
 import UserSelect from "../selector/UserSelect"; // adjust the path as needed
+import KhachHangSelect from "../selector/KhachHangSelect";
 
 const GoogleAccountCRUD = () => {
   const [form] = Form.useForm();
   const [googleAccounts, setGoogleAccounts] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [userSelect, setUserSelect] = useState<any>();
   const [editingGoogleAccount, setEditingGoogleAccount] = useState<{
     _id: string;
   } | null>(null);
-  const [user, setUser] = useState("");
+ 
 
   useEffect(() => {
     fetchGoogleAccounts();
@@ -22,10 +24,10 @@ const GoogleAccountCRUD = () => {
   };
 
   const handleCreateOrUpdate = async (values) => {
-    if (!user) {
-      message.success("Please select a user");
+    if (!userSelect) {
+      message.success("Please select a userSelect.value");
     } else {
-      values.user = user;
+      values.user = userSelect.value;
       if (editingGoogleAccount) {
         await http.patch(
           `/api/googleAccounts/${editingGoogleAccount._id}`,
@@ -83,7 +85,7 @@ const GoogleAccountCRUD = () => {
       >
         New Google Account
       </Button>
-      <Table  pagination={false} dataSource={googleAccounts} columns={columns} rowKey="_id" />
+      <Table pagination={false} dataSource={googleAccounts} columns={columns} rowKey="_id" />
       <Modal
         open={modalVisible}
         title="Google Account"
@@ -97,18 +99,20 @@ const GoogleAccountCRUD = () => {
           onFinish={handleCreateOrUpdate}
         >
           <Form.Item
+            label="user"
+            name="user"
+            rules={[{ required: true, message: "Please input the gmail!" }]}
+          >
+            <KhachHangSelect
+              onChange={(value) => setUserSelect(value)}
+              macv={""} />
+          </Form.Item>
+          <Form.Item
             label="Gmail"
             name="gmail"
             rules={[{ required: true, message: "Please input the gmail!" }]}
           >
             <Input />
-          </Form.Item>
-          <Form.Item
-            label="user"
-            name="user"
-            rules={[{ required: true, message: "Please input the gmail!" }]}
-          >
-            <UserSelect onChange={(value) => setUser(value)} />
           </Form.Item>
           <Form.Item
             label="Password"

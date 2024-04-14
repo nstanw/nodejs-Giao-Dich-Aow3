@@ -22,6 +22,8 @@ import columns from "./columns";
 import giaoDichServices from "../../services/giaoDichs/giaoDichServices";
 import moment from "moment";
 import dayjs from "dayjs";
+import KhachHangSelect from "../selector/KhachHangSelect";
+import SortComponent from "./search";
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -37,11 +39,12 @@ interface Staff {
 function GiaoDichs() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [giaoDichs, setGiaoDichs] = useState<Staff[]>([]);
-  const [userSelect, setUserSelect] = useState();
+  const [userSelect, setUserSelect] = useState<any>();
   const [accSelect, setAccSelect] = useState();
   const [isLoading, setIsLoading] = useState(false);
-  let startDate = moment().startOf('day').format('YYYY-MM-DD HH:mm:ss');
-  let endDate = moment().endOf('day').format('YYYY-MM-DD HH:mm:ss');
+  // const startDate = moment().startOf('month').format('YYYY-MM-DD HH:mm:ss');
+  const startDate = dayjs().add(-1, 'd').format('YYYY-MM-DD HH:mm:ss');
+  const endDate = moment().endOf('day').format('YYYY-MM-DD HH:mm:ss');
 
   const fetchGiaoDichs = async (startDate, endDate) => {
     try {
@@ -77,7 +80,7 @@ function GiaoDichs() {
       .then(async (values) => {
         try {
           values.googleAccount = [accSelect];
-          values.user = userSelect;
+          values.user = userSelect.value;
           await await giaoDichServices.addGiaoDich(values);
           form.resetFields();
         } catch (error) {
@@ -88,6 +91,7 @@ function GiaoDichs() {
         setIsModalVisible(false);
       })
       .catch((info) => {
+        setIsModalVisible(false);
         console.log("Validate Failed:", info);
       });
   };
@@ -133,6 +137,13 @@ function GiaoDichs() {
 
   //#endregion
 
+  //#region  tính toàn tiền, gold, nợ
+  const totalGold = giaoDichs.reduce((total, item) => total + item?.soGold, 0);
+  const totalMoney = giaoDichs.reduce((total, item) => total + item?.soTien, 0);
+  const totalMoneyNo = giaoDichs.reduce((total, item) => total + (item?.soTienNo || 0), 0);
+  const giaGoldTrungBinh = totalMoney / totalGold;
+  //#endregion
+
   return (
     <div>
       <Button type="primary" onClick={showModal}>
@@ -140,8 +151,11 @@ function GiaoDichs() {
       </Button>
 
 
-
-      <RangePicker defaultValue={[dayjs().add(0, 'd'), dayjs()]} onChange={onChangeTimeSearch} presets={rangePresets} />
+      <Form.Item label="Filter time transaction" name="timeSearch">
+        <RangePicker defaultValue={[dayjs().startOf('month'), dayjs()]} onChange={onChangeTimeSearch} presets={rangePresets} />
+      </Form.Item>
+      
+      <SortComponent onSortChange={(value)=> console.log(value)} />;
 
       <Spin spinning={isLoading}>
         <List
@@ -150,7 +164,6 @@ function GiaoDichs() {
           renderItem={(item) => (
             <List.Item>
               <Card title={item?.user?.fullName}>
-                {/* Thêm thông tin khác của khách hàng vào Card tại đây */}
                 <Link to={`/${item?.user?._id}`}>
                   <Button type="link">Chi tiết</Button>
                 </Link>
@@ -162,15 +175,10 @@ function GiaoDichs() {
 
       <Card>
         <Descriptions title="Thông tin giao dịch">
-          <Descriptions.Item label="Tổng số Gold">
-            {giaoDichs.reduce((total, item) => total + item?.soGold, 0).toLocaleString()}
-          </Descriptions.Item>
-          <Descriptions.Item label="Tổng tiền">
-            {giaoDichs.reduce((total, item) => total + item?.soTien, 0).toLocaleString()}
-          </Descriptions.Item>
-          <Descriptions.Item label="Tổng tiền nợ">
-            {giaoDichs.reduce((total, item) => total + (item?.soTienNo || 0), 0).toLocaleString()}
-          </Descriptions.Item>
+          <Descriptions.Item label="Tổng số Gold">{totalGold}</Descriptions.Item>
+          <Descriptions.Item label="Tổng tiền">{totalMoney}</Descriptions.Item>
+          <Descriptions.Item label="Tổng tiền nợ">{totalMoneyNo}</Descriptions.Item>
+          <Descriptions.Item label="Giá gold trung bình">{giaGoldTrungBinh.toLocaleString()}</Descriptions.Item>
         </Descriptions>
       </Card>
       <Table
@@ -186,10 +194,10 @@ function GiaoDichs() {
               setIsModalVisible(true);
               form.setFieldsValue(record);
             },
-          };
+          }
         }}
       />
-      ;
+
       <Modal
         title="Tạo giao dịch mới"
         open={isModalVisible}
@@ -203,15 +211,20 @@ function GiaoDichs() {
           wrapperCol={{ span: 16 }}
           initialValues={initvalue}
         >
+
           <Form.Item label="Chọn khách hàng" name="user">
-            <UserSelect onChange={(value) => setUserSelect(value)} />
+            <KhachHangSelect
+              onChange={(value) => setUserSelect(value)}
+              macv={""} />
           </Form.Item>
-          <Form.Item label="Chọn tài khoản" name="addGoogleAccount">
-            <AccSelect
-              onChange={(value) => setAccSelect(value)}
-              user={userSelect}
-            />
-          </Form.Item>
+          {userSelect && userSelect.value &&
+            <Form.Item label="Chọn tài khoản" name="addGoogleAccount">
+              <AccSelect
+                onChange={(value) => setAccSelect(value)}
+                user={userSelect.value}
+              />
+            </Form.Item>
+          }
           <Form.Item label="Ngày giao dịch" name="ngayGiaoDich">
             <DatePicker />
           </Form.Item>

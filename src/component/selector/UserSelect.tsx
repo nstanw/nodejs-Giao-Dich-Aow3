@@ -1,11 +1,12 @@
 import http from "../../services/http";
 import React, { useEffect, useState } from "react";
 import { Select } from "antd";
+import { User } from "../../services/giaoDichs/dto/Transactions";
 
 const { Option } = Select;
 
 const UserSelect = ({ onChange = (value) => {} }) => {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
     const fetchUsers = async () => {

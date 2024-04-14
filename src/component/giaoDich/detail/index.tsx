@@ -37,6 +37,13 @@ const DetailGiaoDich: React.FC = () => {
         };
     }, [userId]);
 
+    //#region  tính toàn tiền, gold, nợ
+    const totalGold = transactions.reduce((total, item) => total + item?.soGold, 0);
+    const totalMoney = transactions.reduce((total, item) => total + item?.soTien, 0);
+    const totalMoneyNo = transactions.reduce((total, item) => total + (item?.soTienNo || 0), 0);
+    const giaGoldTrungBinh = totalMoney / totalGold;
+    //#endregion
+
 
     return (
         <div>
@@ -48,15 +55,10 @@ const DetailGiaoDich: React.FC = () => {
                         <Descriptions.Item label="Zalo">{user.zalo}</Descriptions.Item>
                     </Descriptions>
                     <Descriptions title="Thông tin giao dịch">
-                        <Descriptions.Item label="Tổng số Gold">
-                            {transactions.reduce((total, item) => total + item?.soGold, 0).toLocaleString()}
-                        </Descriptions.Item>
-                        <Descriptions.Item label="Tổng tiền">
-                            {transactions.reduce((total, item) => total + item?.soTien, 0).toLocaleString()}
-                        </Descriptions.Item>
-                        <Descriptions.Item label="Tổng tiền nợ">
-                            {transactions.reduce((total, item) => total + (item?.soTienNo || 0), 0).toLocaleString()}
-                        </Descriptions.Item>
+                        <Descriptions.Item label="Tổng số Gold">{totalGold.toLocaleString()}</Descriptions.Item>
+                        <Descriptions.Item label="Tổng tiền">{totalMoney.toLocaleString()}</Descriptions.Item>
+                        <Descriptions.Item label="Tổng tiền nợ">{totalMoneyNo.toLocaleString()}</Descriptions.Item>
+                        <Descriptions.Item label="Giá gold trung bình">{giaGoldTrungBinh.toLocaleString()}</Descriptions.Item>
                     </Descriptions>
                 </Card>
             )}
